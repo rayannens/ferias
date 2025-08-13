@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relato de Férias</title>
+    <style>
+
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg-color: #ffffff;
+            --text-color: #333;
+            --primary-color: #3498db;
+            --primary-hover-color: #2980b9;
+            --border-color: #dcdcdc;
+            --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-carta: 'Caveat', cursive;
+        }
+
+        body.dark-mode {
+            --bg-color: #2c3e50;
+            --card-bg-color: #34495e;
+            --text-color: #ecf0f1;
+            --primary-color: #5dade2;
+            --primary-hover-color: #85c1e9;
+            --border-color: #4a6572;
+        }
+
+        
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .form-container {
+            background-color: var(--card-bg-color);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            background-color: var(--primary-color);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex-grow: 1;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover-color);
+        }
+        
+        button#limpar, button#editar {
+            background-color: #95a5a6;
+        }
+        
+        button#limpar:hover, button#editar:hover {
+            background-color: #7f8c8d;
+        }
+
+    
+        .carta-container {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 40px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--card-shadow);
+            font-family: var(--font-carta);
+            font-size: 1.8rem; 
+            line-height: 1.6;
+            color: var(--text-color);
+            display: none;
+            flex-direction: column;
+            gap: 25px;
+            box-sizing: border-box;
+            word-wrap: break-word;
+        }
+        
+        .carta-container p {
+            margin: 0;
+        }
+
+        .assinatura {
+            text-align: left;
+        }
+
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 12px;
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="theme-switcher" id="theme-toggle">🌗 Modo Escuro</button>
+
+    <div class="container">
+        <h1>Relato de Férias</h1>
+
+        <div class="form-container">
+            <input type="text" id="nomeUsuario" placeholder="Digite seu nome completo">
+            <textarea id="relatoFerias" placeholder="Querido Diário..."></textarea>
+            <div class="button-group">
+                <button id="enviar">Enviar</button>
+                <button id="editar">Editar</button>
+                <button id="limpar">Limpar Tudo</button>
+            </div>
+        </div>
+
+        <div class="carta-container" id="carta">
+            <p><strong>Querido Diário,</strong></p>
+            <p id="relato-output"></p>
+            <div class="assinatura">
+                <p>Com carinho,</p>
+                <p id="assinatura-output"></p>
+            </div>
+            <p id="data-output"></p>
+        </div>
+    </div>
+
+    <script>
+ 
+
+
+        const nomeUsuarioInput = document.getElementById('nomeUsuario');
+        const relatoFeriasInput = document.getElementById('relatoFerias');
+        const enviarBtn = document.getElementById('enviar');
+        const editarBtn = document.getElementById('editar');
+        const limparBtn = document.getElementById('limpar');
+        const cartaContainer = document.getElementById('carta');
+        const relatoOutput = document.getElementById('relato-output');
+        const assinaturaOutput = document.getElementById('assinatura-output');
+        const dataOutput = document.getElementById('data-output');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        function validarCampos() {
+            if (nomeUsuarioInput.value.trim() === '' || relatoFeriasInput.value.trim() === '') {
+                alert('Por favor, preencha seu nome e o relato das férias antes de enviar.');
+                return false;
+            }
+            return true;
+        }
+        function getFormattedDate() {
+            const data = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return data.toLocaleDateString('pt-BR', options);
+        }
+
+        enviarBtn.addEventListener('click', () => {
+            if (validarCampos()) {
+
+                relatoOutput.innerText = relatoFeriasInput.value;
+                assinaturaOutput.innerText = nomeUsuarioInput.value;
+                dataOutput.innerText = getFormattedDate();
+
+                cartaContainer.style.display = 'flex';
+
+                nomeUsuarioInput.disabled = true;
+                relatoFeriasInput.disabled = true;
+            }
+        });
+
+        limparBtn.addEventListener('click', () => {
+            nomeUsuarioInput.value = '';
+            relatoFeriasInput.value = '';
+            
+            nomeUsuarioInput.disabled = false;
+            relatoFeriasInput.disabled = false;
+
+            cartaContainer.style.display = 'none';
+        });
+        
+        editarBtn.addEventListener('click', () => {
+            nomeUsuarioInput.disabled = false;
+            relatoFeriasInput.disabled = false;
+            
+            
+            relatoFeriasInput.focus();
+        });
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '☀️ Modo Claro';
+            } else {
+                themeToggle.textContent = '🌗 Modo Escuro';
+            }
+        });
+
+    </script>
+</body>
+</html>
